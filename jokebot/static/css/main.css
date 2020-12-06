@@ -10,7 +10,7 @@ a:hover { color: #A0A0FF; }
 a:active { color: #A0A0FF; }
 
 .btn_submit { clear: both; width: 96%; border-style: solid; border-color: #101010; border-radius: .5rem; margin: 1%; padding: 1%; display: none; }
-.txt_submit { clear: both; width: 96%; margin: 1%; padding: 1%; }
+.txt_submit { clear: both; width: 96%; margin: 1%; padding: 1%; display: none; }
 .txt_display { clear: both; width: 96%; border-style: solid; border-color: #101010; border-radius: .5rem; margin: 1%; padding: 1%; display: none; }
 .clearing_div { clear: both; padding: 0; margin: 0; }
 
