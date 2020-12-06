@@ -1,3 +1,90 @@
-<html>
-<span> stubbed content </span>
+<!DOCTYPE html>
+<!-- 20201206.0 -->
+
+<!-- tells django to make static path available -->
+{% load static %}
+<!-- make sure the csrf key is available for post submission -->
+{% csrf_token %}
+<html lang="en">
+
+<head>
+
+   <title>jokebot demo</title>
+
+   <!-- meta tags for those bots to read -->
+   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+   <meta name="description" content="a little jokebot demo page">
+   <meta name="robots" content="noindex, nofollow">
+
+   <!-- fav icons stuff would go here if we had any -->
+
+   <!-- css includes -->
+   <link id="css_main" rel="stylesheet" href="{% static 'css/main.css' %}" media="all" type="text/css">
+
+   <!-- set viewport - mainly to keep this looking right on a mobile -->
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+   <!-- javascript includes -->
+   <script type = "text/javascript" src="{% static 'js/main.js' %}"></script>
+   <!-- javascript that we want to have loaded before page load  -->
+   <script type = "text/javascript">
+
+      var csrftoken  = 0;       // will be loaded with hash to keep csrf protection happy
+
+      function init_page()
+      {
+         error_text = document.getElementById( "jbd_error" );
+         csrftoken  = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+         /*
+         TODO once we have a DB and models
+         pull count of joke models so we
+	 know if we may tell a joke or not
+         */
+
+      }
+
+   </script>
+
+</head>
+
+<body onload="init_page();">
+
+  <center>
+  <h1 id="jokebot_header">Is This a Joke?</h1>
+
+  <!--
+  todo add an onResize Handler to chose intelligent
+  form geometry based on display size and shape
+  -->
+
+  <form id="jbd_frm" style="width: 85%;">
+  <!--
+  TODO put basic help here, explaining the
+  bot's behaviour and limitations
+  -->
+  <span id="jbd_error" class="txt_display"></span>
+  <div class="clearing_div"></div>
+  <span id="jbd_0" class="txt_display"></span>
+  <div class="clearing_div"></div>
+  <span id="jbd_1" class="txt_display"></span>
+  <div class="clearing_div"></div>
+  <span id="jbd_2" class="txt_display"></span>
+  <div class="clearing_div"></div>
+  <span id="jbd_3" class="txt_display"></span>
+  <div class="clearing_div"></div>
+  <span id="jbd_4" class="txt_display"></span>
+  <div class="clearing_div"></div>
+  <span id="jbd_5" class="txt_display"></span>
+  <div class="clearing_div"></div>
+  <div id="jbd_txt_wrapper" class="txt_submit"><input type="text" style="width: 90%"></div>
+  <div id="jbd_submit" class="btn_submit" onclick="jbd_submit();">s u b m i t</div>
+  <div id="jbd_tell_joke" class="btn_submit" onclick="jbd_tell();">I tell a joke</div>
+  <div id="jbd_listen submit" class="btn_submit" onclick="jbd_listen();">Tell me a joke</div>
+  </form>
+
+  </center>
+
+</body>
+
 </html>
