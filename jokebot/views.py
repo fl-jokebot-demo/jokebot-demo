@@ -1,5 +1,8 @@
 from django.http import HttpResponse
 from django.views.generic import TemplateView
+from jokebot.models import Joke
+
+import json
 
 # Create your views here.
 class IndexPageView(TemplateView):
@@ -8,10 +11,37 @@ class IndexPageView(TemplateView):
 
 def joke_count(request):
     """
-    TODO stub - replace
     pull the number of jokes stored
     """
-    return HttpResponse( "joke_count stub" )
+
+    count  = 0;
+    errors = 0;
+
+    try:
+
+        count = Joke.objects.all().count()
+
+    except:
+
+        # we might like to see error logging or handling here
+        errors = 1;
+
+    finally:
+
+        try:
+
+            retval = { 'errors': errors, 'count': count }
+            retval = json.dumps( retval )
+
+        except:
+
+            # we REALLY might like to see error logging or handling here
+            # or at least set a 5xx code for the response object
+            pass
+
+        finally:
+
+           return HttpResponse( retval )
 
 
 def joke_store(request):

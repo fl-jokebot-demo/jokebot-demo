@@ -16,7 +16,7 @@ from django.db import models
 #
 # upside: no duplicate data. My old DB prof would be happy
 
-class Jokes(models.Model):
+class Joke(models.Model):
     setup     = models.CharField( max_length=4 )
     punchline = models.CharField( max_length=14 )
 
