@@ -29,7 +29,8 @@
    <!-- javascript that we want to have loaded before page load  -->
    <script type = "text/javascript">
 
-      var csrftoken   = 0; // will be loaded with hash to keep csrf protection happy
+      // give these global scope variables an initial value that is safer than 'undefined'
+      var csrf_token  = 0; // will be loaded with hash to keep csrf protection happy
       var btn_tell    = 0; // button element used to prompt jokebot to tell a joke
       var btn_listen  = 0; // button element used to prompt jokebot to listen to a joke
       var btn_submit  = 0; // button element used to submit user input during joke interaction
@@ -38,7 +39,7 @@
 
       function init_page()
       {
-         csrftoken   = document.querySelector( "[name=csrfmiddlewaretoken]" ).value;
+         csrf_token   = document.querySelector( "[name=csrfmiddlewaretoken]" ).value;
          error_text  = document.getElementById( "jbd_error" );
          notice_text = document.getElementById( "jbd_notice" );
          btn_tell    = document.getElementById( "jbd_tell" );
@@ -51,6 +52,7 @@
 	 know if we may tell a joke or not
 	 display buttons appropriately
          */
+         jbd_joke_count( csrf_token, btn_tell )
 
 	 // always enable joke-bot listening on page load
          btn_listen.style.display = "block";
