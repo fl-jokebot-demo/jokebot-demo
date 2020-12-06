@@ -6,8 +6,8 @@ from .views import joke_fetch
 
 urlpatterns = [ 
     path( '', IndexPageView.as_view(), name='index'),
-    path('joke_count', joke_count, name='joke_count'),    
-    path('joke_store', joke_store, name='joke_store'),    
-    path('joke_fetch', joke_fetch, name='joke_fetch'),    
+    path('joke_count', joke_count, name='joke_count'),
+    path('joke_store', joke_store, name='joke_store'),
+    path('joke_fetch', joke_fetch, name='joke_fetch'),
 ]
 

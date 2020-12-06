@@ -5,7 +5,7 @@ from django.views.generic import TemplateView
 class IndexPageView(TemplateView):
     template_name = 'index.html'
 
-    
+
 def joke_count(request):
     """
     TODO stub - replace
@@ -26,7 +26,7 @@ def joke_fetch(request):
     """
     TODO stub - replace
     pull a random joke if any are stored
-    TODO later, allow user to pass in selection 
+    TODO later, allow user to pass in selection
     critera such as ordinal or keyword
     """
     return HttpResponse( "joke_fetch stub" )

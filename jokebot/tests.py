@@ -4,7 +4,7 @@ from django.test import SimpleTestCase
 """
 TODO
 expand these tests to verify proper data handling,
-proper error handling etc. Right now they're not 
+proper error handling etc. Right now they're not
 really checking much of anything beyond 'file exists'
 """
 
@@ -30,5 +30,3 @@ class jokeFetchTests(SimpleTestCase):
     def test_index_page_status_code(self):
         response = self.client.get('/joke_fetch')
         self.assertEqual(response.status_code, 200)
-
-        
