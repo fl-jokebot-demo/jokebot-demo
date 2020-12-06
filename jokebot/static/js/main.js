@@ -26,7 +26,9 @@ function jbd_listen()
 
 /*
  function called when user submits text input to jokebot 
- while either telling or listening to a joke. 
+ while either telling or listening to a joke.
+ logic to vet input and deliver appropriate responses
+ lives here.
 */
 function jbd_submit()
 {
