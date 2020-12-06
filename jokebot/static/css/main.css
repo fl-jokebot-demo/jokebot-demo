@@ -1,0 +1,16 @@
+/* 20201206.0 */
+html { font-size: 18px; font-family: monospace; }
+body { background-color: #202080; padding: 1.2rem; color: #A0A0FF; }
+pre { white-space: pre-wrap; }
+
+a { text-decoration: none; }
+a:link { color: #8080FF; }
+a:visited { color: #6060FF; }
+a:hover { color: #A0A0FF; }
+a:active { color: #A0A0FF; }
+
+.btn_submit { clear: both; width: 96%; border-style: solid; border-color: #101010; border-radius: .5rem; margin: 1%; padding: 1%; display: none; }
+.txt_submit { clear: both; width: 96%; margin: 1%; padding: 1%; }
+.txt_display { clear: both; width: 96%; border-style: solid; border-color: #101010; border-radius: .5rem; margin: 1%; padding: 1%; display: none; }
+.clearing_div { clear: both; padding: 0; margin: 0; }
+
