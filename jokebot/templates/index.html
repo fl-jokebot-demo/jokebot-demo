@@ -29,18 +29,31 @@
    <!-- javascript that we want to have loaded before page load  -->
    <script type = "text/javascript">
 
-      var csrftoken  = 0;       // will be loaded with hash to keep csrf protection happy
+      var csrftoken   = 0; // will be loaded with hash to keep csrf protection happy
+      var btn_tell    = 0; // button element used to prompt jokebot to tell a joke
+      var btn_listen  = 0; // button element used to prompt jokebot to listen to a joke
+      var btn_submit  = 0; // button element used to submit user input during joke interaction
+      var error_text  = 0; // someplace to put the bad news
+      var notice_text = 0; // someplace to put user help/instructions
 
       function init_page()
       {
-         error_text = document.getElementById( "jbd_error" );
-         csrftoken  = document.querySelector('[name=csrfmiddlewaretoken]').value;
+         csrftoken   = document.querySelector( "[name=csrfmiddlewaretoken]" ).value;
+         error_text  = document.getElementById( "jbd_error" );
+         notice_text = document.getElementById( "jbd_notice" );
+         btn_tell    = document.getElementById( "jbd_tell" );
+         btn_listen  = document.getElementById( "jbd_listen" );
+         btn_submit  = document.getElementById( "jbd_submit" );
 
          /*
          TODO once we have a DB and models
          pull count of joke models so we
 	 know if we may tell a joke or not
+	 display buttons appropriately
          */
+
+	 // always enable joke-bot listening on page load
+         btn_listen.style.display = "block";
 
       }
 
@@ -79,8 +92,8 @@
   <div class="clearing_div"></div>
   <div id="jbd_txt_wrapper" class="txt_submit"><input type="text" style="width: 90%"></div>
   <div id="jbd_submit" class="btn_submit" onclick="jbd_submit();">s u b m i t</div>
-  <div id="jbd_tell_joke" class="btn_submit" onclick="jbd_tell();">I tell a joke</div>
-  <div id="jbd_listen submit" class="btn_submit" onclick="jbd_listen();">Tell me a joke</div>
+  <div id="jbd_tell" class="btn_submit" onclick="jbd_tell();">I tell a joke</div>
+  <div id="jbd_listen" class="btn_submit" onclick="jbd_listen();">Tell me a joke</div>
   </form>
 
   </center>
