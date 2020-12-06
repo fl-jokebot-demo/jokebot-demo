@@ -36,3 +36,13 @@ function jbd_submit()
    return;
 }
 
+
+/*
+ function called on page load to find joke count
+*/
+function jbd_joke_count()
+{
+   // stub
+   return;
+}
+
