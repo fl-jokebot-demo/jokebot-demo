@@ -36,6 +36,7 @@
       var btn_submit  = 0; // button element used to submit user input during joke interaction
       var error_text  = 0; // someplace to put the bad news
       var notice_text = 0; // someplace to put user help/instructions
+      var input_text  = 0; // user text input
 
       // these consts for human readable interaction state
       // default is NONE
@@ -51,11 +52,24 @@
 
       var interaction_state = NONE;
 
+      // these consts are used to track the progress of either
+      // telling or hearing the knock knock joke.
+      const KK_NONE           = 0;
+      const KK_INIT           = 10;
+      const KK_INIT_RESPONSE  = 11;
+      const KK_SETUP          = 12;
+      const KK_SETUP_RESPONSE = 13;
+      const KK_PUNCHLINE      = 14;
+      const KK_APPLAUSE       = 15;
+
+      var stage = KK_NONE;
+
       function init_page()
       {
          csrf_token  = document.querySelector( "[name=csrfmiddlewaretoken]" ).value;
          error_text  = document.getElementById( "jbd_error" );
          notice_text = document.getElementById( "jbd_notice" );
+         input_text  = document.getElementById( "jbd_input" );
          btn_tell    = document.getElementById( "jbd_tell" );
          btn_listen  = document.getElementById( "jbd_listen" );
          btn_submit  = document.getElementById( "jbd_submit" );
@@ -65,7 +79,7 @@
 	 know if we may tell a joke or not
 	 display buttons appropriately
          */
-         jbd_joke_count( csrf_token, btn_tell )
+         jbd_joke_count( csrf_token, btn_tell );
 
 	 // always enable joke-bot listening on page load
          btn_listen.style.display = "block";
@@ -93,22 +107,23 @@
   -->
   <span id="jbd_error" class="txt_display"></span>
   <div class="clearing_div"></div>
-  <span id="jbd_0" class="txt_display"></span>
+  <span id="jbd_0" class="txt_display_t"></span>
   <div class="clearing_div"></div>
-  <span id="jbd_1" class="txt_display"></span>
+  <span id="jbd_1" class="txt_display_l"></span>
   <div class="clearing_div"></div>
-  <span id="jbd_2" class="txt_display"></span>
+  <span id="jbd_2" class="txt_display_t"></span>
   <div class="clearing_div"></div>
-  <span id="jbd_3" class="txt_display"></span>
+  <span id="jbd_3" class="txt_display_l"></span>
   <div class="clearing_div"></div>
-  <span id="jbd_4" class="txt_display"></span>
+  <span id="jbd_4" class="txt_display_t"></span>
   <div class="clearing_div"></div>
-  <span id="jbd_5" class="txt_display"></span>
+  <span id="jbd_5" class="txt_display_l"></span>
   <div class="clearing_div"></div>
-  <div id="jbd_txt_wrapper" class="txt_submit"><input type="text" style="width: 90%"></div>
+  <span id="jbd_notice" class="txt_display"></span>
+  <input id="jbd_input" class="txt_submit" type="text" style="width: 90%">
   <div id="jbd_submit" class="btn_submit" onclick="jbd_submit();">s u b m i t</div>
-  <div id="jbd_tell" class="btn_submit" onclick="jbd_tell();">I tell you a joke</div>
-  <div id="jbd_listen" class="btn_submit" onclick="jbd_listen();">You tell me a joke</div>
+  <div id="jbd_tell" class="btn_submit" onclick="jbd_tell();">click here and I tell you a joke</div>
+  <div id="jbd_listen" class="btn_submit" onclick="jbd_listen();">click to tell joke-bot a joke</div>
   </form>
 
   </center>
