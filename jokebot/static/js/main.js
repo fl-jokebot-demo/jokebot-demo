@@ -1,20 +1,47 @@
 /*
-  simple object to store the current joke
+object to store the current joke
 */
 var joke = {};
 joke.setup = "";
 joke.punchline = "";
-// TODO joke.rating, collect when tellingjoke to user
+// TODO joke.rating, collect when telling joke to user
 
 /*
- function called when user requests jokebot tell a 
+ function called when user requests jokebot tell a
  joke. fetches a joke from database and begins the
  interactive joke-telling process as joke-teller
 */
 function jbd_tell()
 {
-   // stub
+   // clear any joke in progress
+   clear_joke();
+   // load the next one
+   fetch_joke( csrf_token );
+
+   // set flag to be used in parsing logic.
+   // this way we know what part the bot should play
+   interactive_state = TELL;
+
+   // set the stage of the joke we are at
+   stage = KK_INIT;
+
+   // set a user prompt
+   let msg = "Ok, I've got a joke for you. Just answer 'who's there?' when I say 'knock knock'";
+   notice_text.innerHTML = msg;
+
+   // we are initiating the joke, start off by writing the first line
+   document.getElementById( "jbd_0" ).innerHTML = "knock knock!";
+
+   // enable the submit button and input field
+   // hide the others
+   btn_listen.style.display  = "none";
+   btn_tell.style.display    = "none";
+   btn_submit.style.display  = "block";
+   input_text.style.display  = "block";
+   notice_text.style.display = "block";
+
    return;
+
 }
 
 
@@ -68,7 +95,6 @@ function jbd_submit()
 
       if ( stage == KK_INIT )
       {
-
          // if it gets here, we are listening for a
 	 // 'knock knock' from the user
 	 let user_text = input_text.value.toLowerCase().trim();
@@ -126,9 +152,8 @@ function jbd_submit()
 
 	 }
 
-
-	 // if we fall through here, the user has given the setup
-	 // we display the joke in progress, update the stage and
+         // if we fall through here, the user has given the setup
+         // we display the joke in progress, update the stage and
          // prompt them to continue
 	 // we also store the setup for writing to DB later
 	 // TODO - if this was actually a live app, profanity filter is needed
@@ -205,8 +230,89 @@ function jbd_submit()
    else if ( interactive_state == TELL )
    {
 
+      if ( stage == KK_INIT )
+      {
+         // if it gets here, we are listening for a
+	 // 'who's there?' from the user
+	 let user_text = input_text.value.toLowerCase().trim();
+
+	 // TODO test for min / max, set FAULT code if failed
+	 if ( user_text.includes( "who's there" ) )
+	 {
+	    // update user message and display the joke in progress
+	    document.getElementById( "jbd_1" ).innerHTML = "who's there?";
+	    document.getElementById( "jbd_2" ).innerHTML = joke.setup;
+
+	    // update stage - we've replied to init, waiting for the joke's setup
+	    let msg = "ok, this is gonna be good. You need to type '" + joke.setup + " who?' next!";
+	    notice_text.innerHTML = msg;
+	    stage = KK_SETUP;
+	    input_text.value = "";
+	    return;
+
+	 }
+	 else
+	 {
+	    // TODO set FAULT code if failed repeatedly
+	    let msg = "I was expecting you to say 'who's there?'.  Can we try again?";
+            notice_text.innerHTML = msg;
+	    return;
+	 }
+
+      }
+
+      if ( stage == KK_SETUP )
+      {
+
+         // if it gets here, we are listening for a setup response
+	 // something like "wooden who?" or "boo who?".
+
+	 let user_text = input_text.value.toLowerCase().trim();
+
+	 if ( user_text.localeCompare( joke.setup + " who?" ) )
+	 {
+
+	    let msg = "I was sort of expecting '" + joke.setup + " who?'. Can we try again?";
+            notice_text.innerHTML = msg;
+	    return;
+
+	 }
+
+    	 // if we fall through here, the user has given the setup response
+  	 // we display the joke in progress with the punchline and
+         // prompt them to continue
+	 document.getElementById( "jbd_3" ).innerHTML = joke.setup + " who?";
+	 document.getElementById( "jbd_4" ).innerHTML = joke.punchline;
+
+	 let msg = "Was that funny? I can't tell. Probably not."
+	 notice_text.innerHTML = msg;
+	 input_text.value = "";
+	 stage = KK_NONE;
+         interactive_state = NONE;
+	 jbd_joke_count( csrf_token, btn_tell );
+         btn_listen.style.display  = "block";
+         btn_submit.style.display  = "none";
+         input_text.style.display  = "none";
+
+         return;
+
+      }
+
       return;
 
+   }
+   else if ( interactive_state == FAULT )
+   {
+      // todo allow interactive error notice, post + dismiss
+      // reset view
+      clear_joke();
+      stage = KK_NONE;
+      interactive_state = NONE;
+      jbd_joke_count( csrf_token, btn_tell );
+      btn_listen.style.display  = "block";
+      btn_submit.style.display  = "none";
+      input_text.style.display  = "none";
+      return;
    }
 
    return;
@@ -395,6 +501,101 @@ function store_joke( joke, token )
    catch( e )
    {
 
+      // TODO client side error handler ("error:\n" + e.description);
+      return false;
+   }
+
+}
+
+
+
+/*
+fetch random joke from our DB
+requires:
+token for csrf
+behaviour:
+writes result to joke objece in global scope
+*/
+function fetch_joke( token )
+{
+
+   var oXmlHttp;
+
+   try
+   {
+      try
+      {
+         oXmlHttp = new ActiveXObject( "Microsoft.XMLHTTP" );
+      }
+      catch( e )
+      {
+
+         try
+         {
+	    oXmlHttp = new XMLHttpRequest();
+         }
+         catch( e )
+         {
+            // TODO client side error handler ( "returning false - no XMLHttp" );
+            return false;
+         }
+      }
+      oXmlHttp.onreadystatechange=function()
+      {
+         if ( oXmlHttp.readyState == 4 )
+         {
+            if ( oXmlHttp.status == 200 )
+            {
+               // we're good
+	       let j = JSON.parse( oXmlHttp.response );
+
+	       if ( ( j.errors != 'undefined' ) && ( j.errors > 0 ) )
+               {
+	          // server returned error
+		  // TODO pass verbose desc for client
+                  interactive_state = FAULT;
+                  return;
+               }
+	       else
+	       {
+
+		  if ( ( j.punchline.length ) && ( j.setup.length ) )
+		  {
+		     // the jokes json object returned by the server
+                     // has non empty values, we will assign to our
+		     // joke object
+
+                     joke.setup = j.setup;
+                     joke.punchline = j.punchline;
+
+		  }
+		  else
+		  {
+                     // we tried and failed
+                     interactive_state = FAULT;
+                     return;
+		  }
+
+	       }
+
+            }
+            else
+            {
+	       // TODO client side error handler
+               // we're not good
+               return false;
+            }
+         }
+      };
+
+      let args="csrfmiddlewaretoken=" + token;
+      oXmlHttp.open( "POST", "joke_fetch", true );
+      oXmlHttp.setRequestHeader( "Content-type", "application/x-www-form-urlencoded" );
+      oXmlHttp.send( args );
+
+   }
+   catch( e )
+   {
       // TODO client side error handler ("error:\n" + e.description);
       return false;
    }

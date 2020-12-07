@@ -3,6 +3,10 @@ from django.views.generic import TemplateView
 from jokebot.models import Joke
 
 import json
+import random
+
+# make randomizer grab a fresh seed
+random.seed()
 
 # Create your views here.
 class IndexPageView(TemplateView):
@@ -84,9 +88,32 @@ def joke_store(request):
 
 def joke_fetch(request):
     """
-    TODO stub - replace
     pull a random joke if any are stored
     TODO later, allow user to pass in selection
     critera such as ordinal or keyword
     """
-    return HttpResponse( "joke_fetch stub" )
+    setup     = ""
+    punchline = ""
+    errors    = 0
+
+    try:
+        # count all jokes
+        row_count = Joke.objects.all().count()
+
+        # get a random number < row count
+        rnd_row   = random.randint( 0, row_count-1 )
+
+        # extract that random row
+        qs        = Joke.objects.all()[rnd_row:rnd_row+1]
+        setup     = qs[0].setup
+        punchline = qs[0].punchline
+
+    except:
+
+        errors = 1
+
+    finally:
+
+        retval = { 'setup': setup, 'punchline': punchline, 'errors': errors }
+        retval = json.dumps( retval )
+        return HttpResponse( retval )
