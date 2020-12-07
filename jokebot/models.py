@@ -17,8 +17,8 @@ from django.db import models
 # upside: no duplicate data. My old DB prof would be happy
 
 class Joke(models.Model):
-    setup     = models.CharField( max_length=4 )
-    punchline = models.CharField( max_length=14 )
+    setup     = models.CharField( max_length=50 )
+    punchline = models.CharField( max_length=256 )
 
     class Meta:
         db_table = "jokes"
