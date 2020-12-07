@@ -9,8 +9,10 @@ a:visited { color: #6060FF; }
 a:hover { color: #A0A0FF; }
 a:active { color: #A0A0FF; }
 
-.btn_submit { clear: both; width: 96%; border-style: solid; border-color: #101010; border-radius: .5rem; margin: 1%; padding: 1%; display: none; }
+.btn_submit { clear: both; width: 96%; background-color: #404040; border-style: solid; border-color: #101010; border-radius: .5rem; margin: 1%; padding: 1%; display: none; }
 .txt_submit { clear: both; width: 96%; margin: 1%; padding: 1%; display: none; }
 .txt_display { clear: both; width: 96%; border-style: solid; border-color: #101010; border-radius: .5rem; margin: 1%; padding: 1%; display: none; }
+.txt_display_t { clear: both; width: 96%; margin: 1%; padding: 1%; color: #A0FFA0; }
+.txt_display_l { clear: both; width: 96%; margin: 1%; padding: 1%; color: #A060A0; }
 .clearing_div { clear: both; padding: 0; margin: 0; }
 
