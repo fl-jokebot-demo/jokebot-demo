@@ -182,7 +182,7 @@ function jbd_submit()
 	 stage = KK_NONE;
 
 	 // store
-	 store_joke( joke );
+	 store_joke( joke, csrf_token );
 
 	 // reset page contents
 	 // show tell button (if joke count > 0)
@@ -196,8 +196,6 @@ function jbd_submit()
          // hide input field and submit button,
          btn_submit.style.display  = "none";
          input_text.style.display  = "none";
-
-         //notice_text.style.display = "block";
 
          return;
 
@@ -322,15 +320,6 @@ function get_applause()
 }
 
 
-function store_joke( joke )
-{
-
-   // stub
-   // post token, setup, punchline to db
-   return;
-
-}
-
 /*
  clear the joke object's strings
  clear the display fields
@@ -346,5 +335,68 @@ function clear_joke()
    document.getElementById( "jbd_2" ).innerHTML = "";
    document.getElementById( "jbd_3" ).innerHTML = "";
    document.getElementById( "jbd_4" ).innerHTML = "";
+
+}
+
+/*
+write joke object into our DB
+requires:
+token for csrf
+joke object
+*/
+function store_joke( joke, token )
+{
+
+   var oXmlHttp;
+
+   try
+   {
+      try
+      {
+         oXmlHttp = new ActiveXObject( "Microsoft.XMLHTTP" );
+      }
+      catch( e )
+      {
+
+         try
+         {
+	    oXmlHttp = new XMLHttpRequest();
+         }
+         catch( e )
+         {
+            // TODO client side error handler ( "returning false - no XMLHttp" );
+            return false;
+         }
+      }
+      oXmlHttp.onreadystatechange=function()
+      {
+         if ( oXmlHttp.readyState == 4 )
+         {
+            if ( oXmlHttp.status == 200 )
+            {
+               // we're good
+               return true;
+            }
+            else
+            {
+	       // TODO client side error handler
+               // we're not good
+               return false;
+            }
+         }
+      };
+
+      let args="csrfmiddlewaretoken=" + token + "&setup=" + encodeURI( joke.setup ) + "&punchline=" + encodeURI( joke.punchline );
+      oXmlHttp.open( "POST", "joke_store", true );
+      oXmlHttp.setRequestHeader( "Content-type", "application/x-www-form-urlencoded" );
+      oXmlHttp.send( args );
+
+   }
+   catch( e )
+   {
+
+      // TODO client side error handler ("error:\n" + e.description);
+      return false;
+   }
 
 }

@@ -13,7 +13,6 @@ def joke_count(request):
     """
     pull the number of jokes stored
     """
-
     count  = 0;
     errors = 0;
 
@@ -49,7 +48,38 @@ def joke_store(request):
     TODO stub - replace
     store the joke if well formed and not duplicate
     """
-    return HttpResponse( "joke_store stub" )
+
+    errors = 0
+
+    try:
+
+        # check setup
+        s = request.POST["setup"]
+
+        #assert len
+        assert ( len( s ) > 0 )
+        assert ( len( s ) < 50 )
+
+        #check punchline
+        p = request.POST["punchline"]
+
+        #assert len
+        assert ( len( p ) > 0 )
+        assert ( len( p ) < 250 )
+
+        # write to model
+        j=Joke( setup=s, punchline=p )
+        j.save()
+
+    except:
+
+        errors = 1
+
+    finally:
+
+        retval = { 'errors': errors }
+        retval = json.dumps( retval )
+        return HttpResponse( retval )
 
 
 def joke_fetch(request):
