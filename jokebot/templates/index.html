@@ -37,9 +37,23 @@
       var error_text  = 0; // someplace to put the bad news
       var notice_text = 0; // someplace to put user help/instructions
 
+      // these consts for human readable interaction state
+      // default is NONE
+      // when user is telling a joke, state is LISTEN
+      // when jokebot is telling a joke, state is TELL
+      // in the case of recoverable error, state is FAULT
+      // in the case of unrecoverable error, state is FATAL
+      const NONE   = 0;
+      const TELL   = 1;
+      const LISTEN = 2;
+      const FAULT  = 3;
+      const FATAL  = 4;
+
+      var interaction_state = NONE;
+
       function init_page()
       {
-         csrf_token   = document.querySelector( "[name=csrfmiddlewaretoken]" ).value;
+         csrf_token  = document.querySelector( "[name=csrfmiddlewaretoken]" ).value;
          error_text  = document.getElementById( "jbd_error" );
          notice_text = document.getElementById( "jbd_notice" );
          btn_tell    = document.getElementById( "jbd_tell" );
@@ -47,7 +61,6 @@
          btn_submit  = document.getElementById( "jbd_submit" );
 
          /*
-         TODO once we have a DB and models
          pull count of joke models so we
 	 know if we may tell a joke or not
 	 display buttons appropriately
@@ -94,8 +107,8 @@
   <div class="clearing_div"></div>
   <div id="jbd_txt_wrapper" class="txt_submit"><input type="text" style="width: 90%"></div>
   <div id="jbd_submit" class="btn_submit" onclick="jbd_submit();">s u b m i t</div>
-  <div id="jbd_tell" class="btn_submit" onclick="jbd_tell();">I tell a joke</div>
-  <div id="jbd_listen" class="btn_submit" onclick="jbd_listen();">Tell me a joke</div>
+  <div id="jbd_tell" class="btn_submit" onclick="jbd_tell();">I tell you a joke</div>
+  <div id="jbd_listen" class="btn_submit" onclick="jbd_listen();">You tell me a joke</div>
   </form>
 
   </center>
